@@ -16,6 +16,7 @@ const OAuthPage: React.FC = () => {
     const fetchData = async () => {
       if (code && clientId && clientSecret && redirectionUri) {
         try {
+          console.log("redirectionUri",redirectionUri)
           const response = await axios.post(
             `https://www.patreon.com/api/oauth2/token`,
             `code=${code}&grant_type=authorization_code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${redirectionUri}`,
