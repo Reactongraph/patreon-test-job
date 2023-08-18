@@ -28,17 +28,21 @@ const OAuthPage: React.FC = () => {
           console.log("API Response:", response.data);
           if (response.data && response.data.access_token) {
             setLoggedIn(true);
-            const ptResponse = await axios.get(
-              "https://www.patreon.com/api/oauth2/v2/identity?include=memberships.campaign&fields%5Bmember%5D=patron_status",
-              {
-                headers: {
-                  Authorization: `Bearer ${response.data.access_token}`,
-                },
-              }
-            );
+            try {
+              const ptResponse = await axios.get(
+                "https://www.patreon.com/api/oauth2/v2/identity?include=memberships.campaign&fields%5Bmember%5D=patron_status",
+                {
+                  headers: {
+                    Authorization: `Bearer ${response.data.access_token}`,
+                  },
+                }
+              );
 
-            console.log("ptData", ptResponse);
-            if (ptResponse.status !== 200) return ptResponse;
+              console.log("ptData", ptResponse);
+              if (ptResponse.status !== 200) return ptResponse;
+            } catch (error) {
+              console.log("error", error);
+            }
           }
         } catch (error) {
           console.error("API Error:", error);
