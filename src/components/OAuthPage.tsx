@@ -16,35 +16,26 @@ const OAuthPage: React.FC = () => {
     const fetchData = async () => {
       if (code && clientId && clientSecret && redirectionUri) {
         try {
-          console.log("redirectionUri",redirectionUri)
-          const response = await axios.post(
-            `https://www.patreon.com/api/oauth2/token`,
-            `code=${code}&grant_type=authorization_code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${redirectionUri}`,
-            {
+          axios
+            .request({
+              url: `https://cors-anywhere.herokuapp.com/https://www.patreon.com/api/oauth2/token`,
+              method: 'post',
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
               },
-            }
-          );
-          console.log("API Response:", response.data);
-          if (response.data && response.data.access_token) {
-            setLoggedIn(true);
-            // try {
-            //   const ptResponse = await axios.get(
-            //     "https://www.patreon.com/api/oauth2/v2/identity?include=memberships.campaign&fields%5Bmember%5D=patron_status",
-            //     {
-            //       headers: {
-            //         Authorization: `Bearer ${response.data.access_token}`,
-            //       },
-            //     }
-            //   );
+              data: `code=${code}&grant_type=authorization_code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${redirectionUri}`,
 
-            //   console.log("ptData", ptResponse);
-            //   if (ptResponse.status !== 200) return ptResponse;
-            // } catch (error) {
-            //   console.log("error", error);
-            // }
-          }
+
+            })
+            .then((response) => {
+              if (response.data && response.data.access_token) {
+                setLoggedIn(true);
+
+              }
+            })
+            .catch(function (error) {
+              console.error("API Error:", error);
+            });
         } catch (error) {
           console.error("API Error:", error);
         } finally {
