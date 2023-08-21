@@ -30,7 +30,7 @@ const OAuthPage: React.FC = () => {
                 setLoggedIn(true);
                 try {
                   const ptResponse = await axios.get(
-                    "https://www.patreon.com/api/oauth2/v2/identity?include=memberships.campaign&fields%5Bmember%5D=patron_status",
+                    "https://cors-anywhere.herokuapp.com/https://www.patreon.com/api/oauth2/v2/identity?include=memberships.campaign&fields%5Bmember%5D=patron_status",
                     {
                       headers: {
                         Authorization: `Bearer ${response.data.access_token}`,
