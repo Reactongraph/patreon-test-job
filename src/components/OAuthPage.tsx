@@ -19,18 +19,30 @@ const OAuthPage: React.FC = () => {
           axios
             .request({
               url: `https://cors-anywhere.herokuapp.com/https://www.patreon.com/api/oauth2/token`,
-              method: 'post',
+              method: "post",
               headers: {
                 "Content-Type": "application/x-www-form-urlencoded",
               },
               data: `code=${code}&grant_type=authorization_code&client_id=${clientId}&client_secret=${clientSecret}&redirect_uri=${redirectionUri}`,
-
-
             })
-            .then((response) => {
+            .then(async (response) => {
               if (response.data && response.data.access_token) {
                 setLoggedIn(true);
+                try {
+                  const ptResponse = await axios.get(
+                    "https://www.patreon.com/api/oauth2/v2/identity?include=memberships.campaign&fields%5Bmember%5D=patron_status",
+                    {
+                      headers: {
+                        Authorization: `Bearer ${response.data.access_token}`,
+                      },
+                    }
+                  );
 
+                  console.log("ptData", ptResponse);
+                  if (ptResponse.status !== 200) return ptResponse;
+                } catch (error) {
+                  console.log("error", error);
+                }
               }
             })
             .catch(function (error) {
